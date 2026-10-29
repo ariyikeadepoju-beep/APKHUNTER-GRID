@@ -7,10 +7,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt email-validator
-
+# Copy all files from build context
 COPY . .
+
+# If built from repository root (where backend/ directory exists), move files into working directory
+RUN if [ -d "backend" ]; then \
+      cp -r backend/* . 2>/dev/null || true; \
+    fi && \
+    pip install --no-cache-dir -r requirements.txt email-validator
 
 ENV PYTHONPATH=/app
 
