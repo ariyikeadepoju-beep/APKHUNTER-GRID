@@ -1,0 +1,25 @@
+services:
+  # 1. Backend API (FastAPI)
+  - type: web
+    name: apkhunter-backend
+    env: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///./apkhunter.db
+
+  # 2. Frontend Dashboard (Next.js)
+  - type: web
+    name: apkhunter-frontend
+    env: docker
+    dockerfilePath: frontend/Dockerfile
+    dockerContext: frontend
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
